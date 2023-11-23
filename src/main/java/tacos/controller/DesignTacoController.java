@@ -15,7 +15,8 @@ import tacos.domain.Ingredient;
 import tacos.domain.Ingredient.Type;
 import tacos.domain.Taco;
 import tacos.domain.TacoOrder;
-
+import javax.validation.Valid;
+import org.springframework.validation.Errors;
 
 @Slf4j
 @Controller
@@ -64,7 +65,10 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processTaco(Taco taco, @ModelAttribute TacoOrder tacoOrder){
+    public String processTaco(@Valid Taco taco,Errors errors ,@ModelAttribute TacoOrder tacoOrder){
+        if (errors.hasErrors()) {
+            return "design";
+        }
         tacoOrder.addTaco(taco);
         log.info("Processing taco:{}",taco);
         return "redirect:/orders/current";

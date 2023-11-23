@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import lombok.extern.slf4j.Slf4j;
 import tacos.domain.TacoOrder;
-
+import javax.validation.Valid;
+import org.springframework.validation.Errors;
 
 @Slf4j
 @Controller
@@ -22,7 +23,12 @@ public class OrderController {
     }
 
     @PostMapping
-    public String processOrder(TacoOrder order, SessionStatus sessionStatus){
+    public String processOrder(@Valid TacoOrder order, Errors errors, SessionStatus sessionStatus){
+
+        if(errors.hasErrors()){
+            return"orderForm";
+        }
+
         log.info("Order submited: {}", order);
         sessionStatus.setComplete();
 
