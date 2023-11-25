@@ -1,39 +1,45 @@
-package tacos.controller;
+package tacos.web;
+import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import lombok.extern.slf4j.Slf4j;
-import tacos.domain.TacoOrder;
-import javax.validation.Valid;
-import org.springframework.validation.Errors;
 
-@Slf4j
+import tacos.TacoOrder;
+import tacos.data.OrderRepository;
+
 @Controller
 @RequestMapping("/orders")
 @SessionAttributes("tacoOrder")
 public class OrderController {
 
+    private OrderRepository orderRepo;
+
+    public OrderController(OrderRepository orderRepo) {
+        this.orderRepo = orderRepo;
+    }
+
     @GetMapping("/current")
-    public String orderForm(){
+    public String orderForm() {
         return "orderForm";
     }
 
     @PostMapping
-    public String processOrder(@Valid TacoOrder order, Errors errors, SessionStatus sessionStatus){
-
-        if(errors.hasErrors()){
-            return"orderForm";
+    public String processOrder(@Valid TacoOrder order, Errors errors, SessionStatus sessionStatus) {
+        if (errors.hasErrors()) {
+            return "orderForm";
         }
 
-        log.info("Order submited: {}", order);
+        orderRepo.save(order);
         sessionStatus.setComplete();
+        System.out.println(order);
 
         return "redirect:/";
     }
-
 
 }
