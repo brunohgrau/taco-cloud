@@ -4,7 +4,7 @@ import lombok.Data;
 import tacos.User;
 
 
-
+@Data
 public class RegistrationForm {
 
     private String username;
@@ -16,11 +16,10 @@ public class RegistrationForm {
     private String zip;
     private String phone;
 
-    public User toUser(PasswordEncoder passwordEncoder){
+    public User toUser(PasswordEncoder passwordEncoder) {
         return new User(
                 username, passwordEncoder.encode(password),
-                fullname,street,city,state,zip,phone
-        );
+                fullname, street, city, state, zip, phone);
     }
 
 }
